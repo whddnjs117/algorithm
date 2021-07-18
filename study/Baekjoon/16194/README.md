@@ -44,7 +44,159 @@ P1 = 5, P2 = 2, P3 = 8, P4 = 10인 경우에는 카드가 2개 들어있는 카�
 
 ### 소스코드
 
-[정종원](11052_정종원.py)
-[김형준](CardTwo16194.java)
-[김현선](A16914_1.java)
-[김영웅](A16194_2.java)
+#### 정종원
+``` python
+n = int(input())
+card = [0]
+card += list(map(int, input().split()))
+
+# 카드의 길이만큼 배열생성
+dp = [0] * card.__len__();
+# 카드팩 1개 사기
+# dp[1] = card[1]
+# 카드팩 2개 사기
+# dp[2] = card[2] , card[1] * 2
+# 카드팩 3개 사기
+# dp[3] = card[3] , card[2] + card[1] , card[1] * 3
+# 카드팩 4개 사기
+# dp[4] = card[4] , card[3] + card[1] , card[2] + card[2] , card[1] * 4
+# 식정리
+# dp[n] = card[n] , card[n-1] + card[1] , card[n-2] + card[2] ,card[n-3] + card[3] .... = dp[n] , dp[n-i]+dp[i]
+
+
+for i in range(1,n+1):
+    # dp[n] = card[n] 의 값을 저장한다. 카드팩 n개를 구매하기위해 card[n]값을 지불을 위해 
+    dp[i] = card[i];
+    for j in range(1,i):
+        dp[i] = min(dp[i] , dp[i-j] + dp[j]);
+
+print(dp[n]);
+```
+#### 김형준
+``` java
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
+public class CardTwo16194 {
+
+    public static void main(String[] args) throws IOException {
+        /**
+         * 카드구매하기1번 문제와 거의 같음
+         * 최대값과 다르게 j가 1일경우 dp[i]가 0이라 최소값으로 잡아버려서
+         * j가 1일 경우에만 값을 넣고 2부터 비교해서 최소값을 찾음
+         * 164ms
+         */
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        int N = Integer.parseInt(br.readLine());
+
+        int[] dp = new int[N + 1];
+        List<Integer> cardPackList =
+            Stream.of(br.readLine().split(" ")).map(Integer::parseInt).collect(Collectors.toList());
+
+        dp[1] = cardPackList.get(0);
+        for(int i = 1; i < N + 1; i++)
+            for (int j = 1; j <= i; j++)
+                if (j == 1)
+                    dp[i] = dp[i - j] + cardPackList.get(0);
+                else if (dp[i] > dp[i - j] + cardPackList.get(j - 1))
+                    dp[i] = dp[i - j] + cardPackList.get(j - 1);
+
+        System.out.println(dp[N]);
+    }
+}
+```
+#### 김현선
+``` java
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.StringTokenizer;
+
+/**
+ * 카드 구매하기 2
+ * https://www.acmicpc.net/problem/11052
+ */
+public class A16194 {
+
+	public static void main(String[] args) throws NumberFormatException, IOException {
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		int n = Integer.parseInt(br.readLine());
+		
+		int[] pack = new int[n+1];
+		int[] dp = new int[n+1];
+		
+		String target = br.readLine();
+		StringTokenizer st = new StringTokenizer(target, " ");
+		
+		for(int i = 1; i <= n; i++) {
+			pack[i] = Integer.parseInt(st.nextToken());
+			dp[i] = Integer.MAX_VALUE;
+		}
+		
+		for(int i = 1; i <= n; i++) {
+			System.out.println(i + "개 카드");
+			for(int j = 1; j <= i; j++) {
+				//System.out.println("i: " + i + ", j: " + j);
+				System.out.println(dp[i] + ", " + dp[i-j] + "+" + pack[j]);
+				
+				dp[i] = Math.min(dp[i], dp[i-j] + pack[j]);
+			}
+			//System.out.println("dp[i]: " + dp[i]);
+			System.out.println();
+		}
+		System.out.println(dp[n]);
+
+	}
+
+}
+```
+#### 김영웅
+``` java
+import java.util.Scanner;
+
+public class A16194 {
+   public static void main(String[] args) {
+      Scanner sc = new Scanner(System.in);
+      
+      int n = sc.nextInt();
+      
+      // n개의 카드팩배열 초기화
+      int[] cardpack = new int[n+1];
+      // 가격 배열
+      int[] minprice = new int[n+1];
+      
+      
+      // 최소값을 비교하기때문에 최소값 배열에 0이아닌 n장팩의 가격을 넣는다
+
+      for(int i=1; i<cardpack.length; i++) {
+         cardpack[i] = sc.nextInt();
+         minprice[i] = cardpack[i];
+      }
+      
+      
+      // ex)
+      // 
+      // 먼저 1번째 방에는 1장짜리 카드팩 가격이 들어가있다
+      // Math.min 메서드를 사용해서 두 값을 비교해 최소값을 minprice[1] (1장을 사기위한 최소값) 에 넣어준다
+      // minprice[1] , (cardpack[1] + minprice[1-1]) 두 값을 비교
+      // minprice[1-1] 즉 0번째 배열에는 아무 값도 존재하지 않아서 카드팩 1장짜리 가격과 1장을 사기위한 최소값을 비교해 최소값을 배열에 넣어준다
+        
+      // 3장을 예로 들면
+      // 카드팩1장짜리 가격 + (3-1)장을 사기위한 최소값
+      // 카드팩2장짜리 가격 + (3-2)장을 사기위한 최소값
+      // 카드팩3장짜리 가격 ... 을 i 와 j 값이 같아질때까지 반복해 최소값을 구한다
+      for(int i = 1; i <=n; i++) {
+            for(int j = 1; j <=i; j++) {
+                minprice[i] = Math.min(minprice[i],cardpack[j]+minprice[i-j]);
+            }
+        }
+        System.out.println(minprice[n]);
+    }
+      
+   }
+
+```
