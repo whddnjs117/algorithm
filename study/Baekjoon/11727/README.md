@@ -22,4 +22,17 @@ Memoization(메모이제이션) 기법 알게 되어 주어진 입력값에 대�
 
 ### 소스코드
 
-[정종원](11727_정종원.py)
+#### 정종원
+```python
+
+n = int(input());
+
+array = [0,1,3];
+
+for i in range(3,n+1):
+    array.append(i)
+    array[i] = array[i-1] + array[i-2] * 2;
+
+print(array[n] % 10007);
+
+```
