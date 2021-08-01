@@ -57,11 +57,94 @@ for i in range(4,91):
 print(dp[n]);
 ```
 ### 김형준
-```
+``` java
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+
+public class PinaryNumber2193 {
+    static long[][] dp = new long[91][2];
+
+    public static void main(String[] args) throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+
+        // f(1) = 1
+        // f(2) = 10
+        // f(3) = 101, 100
+        // f(4) = 1000, 1010, 1001
+        // f(5) = 10000, 10100, 10101, 10010, 10001
+
+        // 끝자리가 0일 경우 끝자리가 1일 경우
+        //        n = 1   2   3   4   5
+        // dp[n][0] = 0   1   1   2   3
+        // dp[n][1] = 1   0   1   1   2
+        // dp[n][0] = dp[n - 1][0] + dp[n - 2][0]
+        // dp[n][1] = dp[n - 1][1] + dp[n - 2][1]
+        // dp[n] = dp[n][0] + dp[n][1]
+
+        dp[1][1] = 1;
+        dp[2][0] = 1;
+        dp[3][0] = 1;
+        dp[3][1] = 1;
+
+        for (int i = 4; i <= 90; i++) {
+            dp[i][0] = dp[i - 1][0] + dp[i - 2][0];
+            dp[i][1] = dp[i - 1][1] + dp[i - 2][1];
+        }
+
+        int n = Integer.parseInt(br.readLine());
+        System.out.println(dp[n][0] + dp[n][1]);
+
+        br.close();
+    }
+}
 ```
 ### 김현선
-```
+``` java
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+
+public class A2193 {
+	static long[] dp2;
+
+	public static void main(String[] args) throws NumberFormatException, IOException {
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		int n = Integer.parseInt(br.readLine());
+
+		long[] dp = new long[n+1];
+		dp[0] = 0;
+		dp[1] = 1;
+		
+		for(int i = 2; i <= n; i++) {
+			dp[i] = dp[i-1] + dp[i-2];
+		}
+		
+		System.out.println("bottom-up");
+		System.out.println(dp[n]);
+		
+		dp2 = new long[n+1];
+		
+		System.out.println("top-down");
+		System.out.println(test(n));
+		
+	}
+
+	public static long test(int n) {
+		if(n == 1) {
+			return 1;
+		} else if(n == 2) {
+			return 1;
+		}
+		
+		for(int i = 3; i<= n; i++) {
+			dp2[i] = test(i-1) + test(i-2);
+		}
+		
+		return dp2[n];
+	}
+}
 ```
 ### 김영웅
-```
+``` java
 ```
