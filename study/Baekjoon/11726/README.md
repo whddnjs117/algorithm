@@ -36,3 +36,61 @@ for i in range(3,n+1):
 print(array[n] % 10007);
 
 ```
+#### 김형준
+```java
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+
+public class Tiling11726 {
+
+    public static void main(String[] args) throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        int N = Integer.parseInt(br.readLine());
+        int[] dp = new int[1001];
+
+        dp[0] = 0;
+        dp[1] = 1;
+        dp[2] = 2;
+        for (int i = 3; i <= N; i++) {
+            dp[i] = (dp[i-1] + dp[i-2]) % 10007;
+        }
+        System.out.println(dp[N]);
+    }
+}
+```
+#### 김현선
+```java
+```
+#### 김영웅
+```java
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+
+public class A_11726 {
+
+	public static void main(String[] args) throws NumberFormatException, IOException {
+		// TODO Auto-generated method stub
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		
+		int n = Integer.parseInt(br.readLine());
+		
+		// 1ºÎÅÍ ½ÃÀÛÇÏ±â¿¡ +1
+		int[] arr = new int[n+1];
+		
+		for(int i=1; i<=n; i++) {
+			if(i==1) {
+				arr[i] = 1;
+			}else if(i==2) {
+				arr[i] = 2;
+			}else {
+				arr[i] = (arr[i-2] + arr[i-1]) % 10007;
+			}
+		}
+		System.out.println(arr[n]);
+	}
+	
+
+}
+```

@@ -68,7 +68,74 @@ for i in lst:
 ```
 #### 김형준
 ```java
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.StringTokenizer;
 
+public class SubSequence14002 {
+
+    public static void main(String[] args) throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        // 가장 긴 증가하는 부분 수열에서 배열출력이 추가됨
+        // dp[] 가 가장 높은 값 즉 가장긴부분의 끝부분의 index 를 저장
+        // 그 끝부분 부터 dp를 비교해서 작은 값들을 배열에 넣고 정렬 or 뒷부분부터 출력 시킴
+
+        int N = Integer.parseInt(br.readLine());
+        int[] arr = new int[N];
+        int[] dp = new int[N];
+        int max = -1;
+        int maxIndex = 0;
+
+        // split 사용보다 Tokenizer 사용이 조금 더 빠르다고 함
+        StringTokenizer st = new StringTokenizer(br.readLine()," ");
+
+        for(int i = 0; i < N; i++) {
+            arr[i] = Integer.parseInt(st.nextToken());
+        }
+
+        for(int i = 0; i < N; i++) {
+            dp[i] = 1;
+            for(int j = 0; j < i; j++) {
+                if(arr[j] < arr[i] && dp[i] < dp[j] + 1) {
+                    dp[i] = dp[j] + 1;
+                }
+            }
+            if (max < dp[i]) {
+                max = dp[i];
+                maxIndex = i; // 여기서 가장 높은 dp의 배열 인덱스를 저장
+            }
+        }
+
+        List<Integer> resultList = new ArrayList<>();
+        int count = max;
+
+        // 가장 높은 배열의 자리부터 아래로 dp를 탐색해가며 결과리스트에 추가
+        for (int i = maxIndex; i >= 0; i--) {
+            if (dp[i] == count) {
+                resultList.add(arr[i]);
+                count--;
+            }
+        }
+
+        System.out.println(max);
+
+        // 1. 정렬없이 끝부분부터 출력하는 방법 176ms
+        StringBuilder sb = new StringBuilder();
+        for (int i = max - 1; i >= 0; i--) {
+            sb.append(resultList.get(i)).append(" ");
+        }
+        System.out.println(sb);
+
+        // 2. stream 으로 정렬 후 출력하는 방법 180ms
+        // stream 사용해서 정렬 후 출력하는거나 그냥 끝부분부터 출력하는거나 비슷함
+        resultList.stream()
+            .sorted(Integer::compareTo)
+            .forEach(e -> System.out.print(e + " "));
+    }
+}
 ```
 #### 김현선
 ``` java
@@ -76,5 +143,112 @@ for i in lst:
 ```
 #### 김영웅
 ``` java
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.Arrays;
+import java.util.Stack;
 
+public class A_14002 {
+	public static void main(String[] args) throws NumberFormatException, IOException {
+		// 입력을 받기 위함
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		int length = Integer.parseInt(br.readLine());
+		//  수열 배열
+		long[] seq = new long[length];
+		// 입력을 받아 long 배열로 형변환
+		seq = Arrays.asList(br.readLine().split(" ")).stream().mapToLong(Long::parseLong).toArray();
+		// 길이 배열
+		int[] lengths = new int[length];
+		
+		Stack<String> result = new Stack<String>();
+		
+		lengths[0] = 1;
+		int max = 0;
+		// 정답 문자열을 만들기 위함
+		StringBuilder answer = new StringBuilder();
+		// 역추적 하기위한 임시 배열
+		int[] temp = new int[length];
+		for(int i=0; i<seq.length; i++) {
+			lengths[i] = 1;
+			temp[i] = -1;
+			for(int j=0; j<i; j++) {
+				// i번째 수가 j번째 수보다 크면서 i번째 길이보다 j번째 길이에 1더한 값 보다 크면
+				if(seq[i]>seq[j] && lengths[i] < lengths[j]+1) {
+					// i번째에 j번째 길이의 +1 한값을 넣어줌
+					lengths[i] = lengths[j]+1;
+					temp[i]  = j;
+					
+					// seq     10 20 10 30 20 50
+					// lengths 1  2  1  3  2  4
+					
+				}
+			}
+		}
+		//				0	1	2	3	4	5					
+		// seq[i]      10	20	10	30	20	50
+		// lengths[i]	1	2	1	3	2	4
+		// temp[i]	   -1	0  -1	1	0	3
+		
+		// 수열의 가장 큰 값 부터 넣고 그 다음 temp[index] 값을 stack에 넣음
+		// 계속역추적
+		
+		
+		
+		
+		
+		int index = 0;
+		for(int i=0; i<lengths.length; i++) {
+			if(max<lengths[i]) {
+				max = lengths[i];
+				index = i;
+			
+			}
+		}
+		
+//		for(int i=0; i<=index; i++) {
+//			
+//			if(!result.contains(seq[i]+"")) {
+//				result.add(seq[i]+"");
+//			}
+//		}
+		
+		answer.append(max).append("\n");
+		while(index != -1) {
+			result.push(seq[index]+"");
+			index = temp[index];
+		}
+//		0	1	2	3	4	5					
+// seq[i]      10	20	10	30	20	50
+// lengths[i]	1	2	1	3	2	4
+// temp[i]	   -1	0  -1	1	0	3
+		
+
+//		for(int i=result.size()-1; i>=0; i--) {
+//			System.out.print(result.get(i)+" ");
+//			
+//			
+//		}
+		
+		// STACK
+		// FILO
+		// 퍼스트인 라스트 아웃 구조니 마지막 넣은 값부터 뽑아 삭제하면서 문자열에 이어붙임
+		
+	
+		// 10
+		// 20
+		// 30
+		// 50
+		
+		// answer
+		// 4
+		// 10 20 30 50
+		while(!result.isEmpty()) {
+			answer.append(result.pop()).append(" ");
+		}
+		
+		System.out.println(answer);
+		
+	}
+}
 ```
