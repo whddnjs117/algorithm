@@ -6,7 +6,7 @@ lst = list(map(int,input().split()));
 
 dplst = [];
 dp = [[0] * n for _ in range(0,2)] ;
-ans = 0;
+ans = -1e9;
 
 # 연속합의 최대값을 우선 구하기
 # 배열자리 마다 연속합을 저장한다.
@@ -22,14 +22,16 @@ ans = 0;
 # dp[1][3] = 10 + 3 + 1 , 10 -4 + 3 
 # .. 
 # dp[1][n] = dp[1][n-1] + lst[n] , dp[0][n-1];
+dp[0][0] = lst[0];
+for i in range(1,n):
 
-for i in range(0,n):
 
-
-    dp[0][i] = lst[i];
-    if i!=0:
-        dp[0][i] = max(dp[0][i-1] + lst[i] , lst[i]);
-        dp[1][i] = max(dp[1][i-1] + lst[i] , dp[0][i-1]);
+    dp[0][i] = max(dp[0][i-1] + lst[i] , lst[i]);
+    dp[1][i] = max(dp[1][i-1] + lst[i] , dp[0][i-1]);
     ans = max(ans , dp[0][i] , dp[1][i]);
 
-print(ans)
+if n > 1:
+
+    print(ans)
+else:
+    print(lst[0]);
